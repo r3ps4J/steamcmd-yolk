@@ -6,6 +6,10 @@ A pterodactyl yolk for hosting steamcmd servers on amd64 and arm64 based on [pal
 
 Arm64 compatibility is done through box86 and box64 thanks to the [steamcmd-arm64 image](https://github.com/sonroyaalmerol/steamcmd-arm64) by [sonroyaalmerol](https://github.com/sonroyaalmerol). This is a drop-in replacement for [cm2network/steamcmd](https://github.com/CM2Walki/steamcmd/), which is used for amd64.
 
+For some servers this image might be unstable. If you experience this I recommend taking a look at [QuintenQVD0](https://github.com/QuintenQVD0)'s [Q_eggs repository](https://github.com/QuintenQVD0/Q_eggs). He has created eggs that run with the FEX emulator instead.
+
+FEX can run more stable, based on my own experience, but is also a bit slower. It also requires you to download a RootFS which can take up a lot of space. For a more detailed comparison between emulators I recommend reading this arcticle by the creator of box86 and box64: https://box86.org/2022/03/box86-box64-vs-qemu-vs-fex-vs-rosetta2/.
+
 ## Usage
 
 You can use this yolk like any other yolk. Note that steamcmd is already installed in /home/steam/steamcmd. You can use the `STEAMCMDDIR` environment variable to get the right path.
