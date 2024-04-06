@@ -52,7 +52,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # install rcon
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-COPY --from=rcon-cli_builder /build/gorcon /usr/bin/rcon-cli
+COPY --from=rcon-cli_builder /build/gorcon /usr/bin/rcon
 
 # Add container user
 RUN useradd -m -d /home/container container
