@@ -29,23 +29,22 @@ There is also a variant of the image with proton support. This is based on the `
 The available tags are:
 
 Normal image:
-- `ghcr.io/r3ps4j/steamcmd-yolk:latest` latest version.
-- `ghcr.io/r3ps4j/steamcmd-yolk:v{{major}}` latest version within a specific major version.
-- `ghcr.io/r3ps4j/steamcmd-yolk:v{{major}}.{{minor}}` latest version within a specific major and minor version.
-- `ghcr.io/r3ps4j/steamcmd-yolk:v{{major}}.{{minor}}.{{patch}}` specific version.
+- `latest` latest version.
+- `v{{major}}` latest version within a specific major version.
+- `v{{major}}.{{minor}}` latest version within a specific major and minor version.
+- `v{{major}}.{{minor}}.{{patch}}` specific version.
 
 With root as default user:
-- `ghcr.io/r3ps4j/steamcmd-yolk:root` latest version.
-- `ghcr.io/r3ps4j/steamcmd-yolk:root-v{{major}}` latest version within a specific major version.
-- `ghcr.io/r3ps4j/steamcmd-yolk:root-v{{major}}.{{minor}}` latest version within a specific major and minor version.
-- `ghcr.io/r3ps4j/steamcmd-yolk:root-v{{major}}.{{minor}}.{{patch}}` specific version.
+- `root` latest version.
+- `root-v{{major}}` latest version within a specific major version.
+- `root-v{{major}}.{{minor}}` latest version within a specific major and minor version.
+- `root-v{{major}}.{{minor}}.{{patch}}` specific version.
 
 With proton support:
-- `ghcr.io/r3ps4j/steamcmd-yolk:proton` latest version.
-- `ghcr.io/r3ps4j/steamcmd-yolk:proton-v{{major}}` latest version within a specific major version.
-- `ghcr.io/r3ps4j/steamcmd-yolk:proton-v{{major}}.{{minor}}` latest version within a specific major and minor version.
-- `ghcr.io/r3ps4j/steamcmd-yolk:proton-v{{major}}.{{minor}}.{{patch}}` specific version.
-- `ghcr.io/r3ps4j/steamcmd-yolk:proton-v{{major}}.{{minor}}.{{patch}}` specific version.
+- `proton` latest version.
+- `proton-v{{major}}` latest version within a specific major version.
+- `proton-v{{major}}.{{minor}}` latest version within a specific major and minor version.
+- `proton-v{{major}}.{{minor}}.{{patch}}` specific version.
 
 ## Drop-in replacement
 
