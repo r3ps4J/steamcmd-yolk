@@ -18,9 +18,11 @@ ${STEAMCMDDIR}/steamcmd.sh +force_install_dir /mnt/server +login anonymous +app_
 
 This image doesn't work well by just running it without an installation script. I don't know why, but just install the game through an installation script if you make an egg based on this. Running this image outside of pterodactyl does not require an installation script.
 
-## Root variant
+## Variants
 
 There is a variant of the image available with `root` set as the default user. This was mainly done in order to use it as install script container for pterodactyl, but you might find it useful if you are running this image outside of pterodactyl and need root access.
+
+There is also a variant of the image with proton support. This is based on the `steamcmd:proton` image by parkervcp. It is used for games that only have a windows server available.
 
 ## Available tags
 
@@ -38,9 +40,16 @@ With root as default user:
 - `ghcr.io/r3ps4j/steamcmd-yolk:root-v{{major}}.{{minor}}` latest version within a specific major and minor version.
 - `ghcr.io/r3ps4j/steamcmd-yolk:root-v{{major}}.{{minor}}.{{patch}}` specific version.
 
+With proton support:
+- `ghcr.io/r3ps4j/steamcmd-yolk:proton` latest version.
+- `ghcr.io/r3ps4j/steamcmd-yolk:proton-v{{major}}` latest version within a specific major version.
+- `ghcr.io/r3ps4j/steamcmd-yolk:proton-v{{major}}.{{minor}}` latest version within a specific major and minor version.
+- `ghcr.io/r3ps4j/steamcmd-yolk:proton-v{{major}}.{{minor}}.{{patch}}` specific version.
+- `ghcr.io/r3ps4j/steamcmd-yolk:proton-v{{major}}.{{minor}}.{{patch}}` specific version.
+
 ## Drop-in replacement
 
-This yolk can be used as a drop-in replacement for parkervcp's `games:source` and `steamcmd` yolks. In order to use it you will have to do 2 things.
+This yolk can be used as a drop-in replacement for parkervcp's `games:source`, `steamcmd` and `steamcmd:proton` yolks. In order to use it you will have to do 2 things.
 
-1. Add `ghcr.io/r3ps4j/steamcmd-yolk` to the "Docker Images" part of an egg that is currently using one of the above images. Then select this yolk for the server with which you want to use it.
+1. Add `ghcr.io/r3ps4j/steamcmd-yolk:latest` (or `ghcr.io/r3ps4j/steamcmd-yolk:proton` if the egg used `parkervcp/steamcmd:proton` before) to the "Docker Images" part of an egg that is currently using one of the above images. Then select this yolk for the server with which you want to use it.
 2. Go to the "Install Script" part of the egg configuration, and change the script container to `ghcr.io/r3ps4j/steamcmd-yolk:root`. *Note that this image is based on debian, if the script container was not set to debian before it might cause issues.*
