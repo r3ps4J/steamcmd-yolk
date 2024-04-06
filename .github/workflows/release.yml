@@ -39,12 +39,38 @@ jobs:
             type=semver,pattern=v{{major}}
           flavor: latest=true
 
+      - name: Docker - Metadata (Root)
+        id: meta_root
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/${{ github.repository }}
+          # generate Docker tags based on the following events/attributes
+          tags: |
+            type=raw,value=root
+            type=semver,pattern=root-v{{version}}
+            type=semver,pattern=root-v{{major}}.{{minor}}
+            type=semver,pattern=root-v{{major}}
+          flavor: latest=false
+
       - name: Docker - Build / Push
         id: docker_build
         uses: docker/build-push-action@v5
         with:
           platforms: linux/amd64,linux/arm64
+          target: container
           push: true
           tags: ${{ steps.meta.outputs.tags }}
+          build-args: |
+            GIT_VERSION_TAG=${{ github.event.release.tag_name }}
+
+      - name: Docker - Build / Push (Root)
+        id: docker_build_root
+        uses: docker/build-push-action@v5
+        with:
+          platforms: linux/amd64,linux/arm64
+          target: container-root
+          push: true
+          tags: ${{ steps.meta_root.outputs.tags }}
           build-args: |
             GIT_VERSION_TAG=${{ github.event.release.tag_name }}

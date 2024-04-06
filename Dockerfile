@@ -26,7 +26,7 @@ ARG TARGETARCH
 # Ignoring the lack of a tag here because the tag is defined in the above FROM lines
 # and hadolint isn't aware of those.
 # hadolint ignore=DL3006
-FROM base-${TARGETARCH}
+FROM base-${TARGETARCH} AS container
 
 LABEL maintainer="info@r3ps4j.nl" \
       name="r3ps4j/steamcmd-yolk" \
@@ -75,3 +75,6 @@ RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/usr/bin/tini", "-g", "--"]
 CMD [ "/entrypoint.sh" ]
+
+FROM container AS container-root
+USER root
