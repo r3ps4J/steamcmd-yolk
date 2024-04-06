@@ -63,6 +63,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           build-args: |
             GIT_VERSION_TAG=${{ github.event.release.tag_name }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Docker - Build / Push (Root)
         id: docker_build_root
@@ -74,3 +76,5 @@ jobs:
           tags: ${{ steps.meta_root.outputs.tags }}
           build-args: |
             GIT_VERSION_TAG=${{ github.event.release.tag_name }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
