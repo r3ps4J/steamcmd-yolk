@@ -18,6 +18,26 @@ ${STEAMCMDDIR}/steamcmd.sh +force_install_dir /mnt/server +login anonymous +app_
 
 This image doesn't work well by just running it without an installation script. I don't know why, but just install the game through an installation script if you make an egg based on this. Running this image outside of pterodactyl does not require an installation script.
 
+## Root variant
+
+There is a variant of the image available with `root` set as the default user. This was mainly done in order to use it as install script container for pterodactyl, but you might find it useful if you are running this image outside of pterodactyl and need root access.
+
+## Available tags
+
+The available tags are:
+
+Normal image:
+- `ghcr.io/r3ps4j/steamcmd-yolk:latest` latest version.
+- `ghcr.io/r3ps4j/steamcmd-yolk:v{{major}}` latest version within a specific major version.
+- `ghcr.io/r3ps4j/steamcmd-yolk:v{{major}}.{{minor}}` latest version within a specific major and minor version.
+- `ghcr.io/r3ps4j/steamcmd-yolk:v{{major}}.{{minor}}.{{patch}}` specific version.
+
+With root as default user:
+- `ghcr.io/r3ps4j/steamcmd-yolk:root` latest version.
+- `ghcr.io/r3ps4j/steamcmd-yolk:root-v{{major}}` latest version within a specific major version.
+- `ghcr.io/r3ps4j/steamcmd-yolk:root-v{{major}}.{{minor}}` latest version within a specific major and minor version.
+- `ghcr.io/r3ps4j/steamcmd-yolk:root-v{{major}}.{{minor}}.{{patch}}` specific version.
+
 ## Drop-in replacement
 
 This yolk can be used as a drop-in replacement for parkervcp's `games:source` and `steamcmd` yolks. In order to use it you will have to do 2 things.
