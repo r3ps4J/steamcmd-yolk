@@ -31,7 +31,6 @@ FROM base-${TARGETARCH}
 LABEL maintainer="info@r3ps4j.nl" \
       name="r3ps4j/steamcmd-yolk" \
       github="https://github.com/r3ps4j/steamcmd-yolk" \
-      dockerhub="https://hub.docker.com/r/r3ps4j/steamcmd-yolk" \
       org.opencontainers.image.authors="r3ps4J" \
       org.opencontainers.image.source="https://github.com/r3ps4j/steamcmd-yolk"
 
