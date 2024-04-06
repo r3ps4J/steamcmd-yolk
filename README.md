@@ -23,4 +23,4 @@ This image doesn't work well by just running it without an installation script. 
 This yolk can be used as a drop-in replacement for parkervcp's `games:source` and `steamcmd` yolks. In order to use it you will have to do 2 things.
 
 1. Add `ghcr.io/r3ps4j/steamcmd-yolk` to the "Docker Images" part of an egg that is currently using one of the above images. Then select this yolk for the server with which you want to use it.
-2. Go to the "Install Script" part of the egg configuration, and change the script container to `ghcr.io/r3ps4j/steamcmd-yolk`. *Note that this image is based on debian, if the script container was not set to debian before it might cause issues.*
+2. Go to the "Install Script" part of the egg configuration, and change the script container to `ghcr.io/r3ps4j/steamcmd-yolk:root`. *Note that this image is based on debian, if the script container was not set to debian before it might cause issues.*
