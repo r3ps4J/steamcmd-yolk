@@ -39,7 +39,7 @@ jobs:
         with:
           images: |
             ghcr.io/${{ github.repository }}
-          tags: type=raw,value=dev-root
+          tags: type=raw,value=root-dev
           flavor: latest=false
 
       - name: Docker - Metadata (Proton)
@@ -48,7 +48,7 @@ jobs:
         with:
           images: |
             ghcr.io/${{ github.repository }}
-          tags: type=raw,value=dev-proton
+          tags: type=raw,value=proton-dev
           flavor: latest=false
 
       - name: Docker - Build / Push
