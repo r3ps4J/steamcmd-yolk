@@ -53,6 +53,20 @@ jobs:
             type=semver,pattern=root-v{{major}}
           flavor: latest=false
 
+      - name: Docker - Metadata (Proton)
+        id: meta_proton
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/${{ github.repository }}
+          # generate Docker tags based on the following events/attributes
+          tags: |
+            type=raw,value=proton
+            type=semver,pattern=proton-v{{version}}
+            type=semver,pattern=proton-v{{major}}.{{minor}}
+            type=semver,pattern=proton-v{{major}}
+          flavor: latest=false
+
       - name: Docker - Build / Push
         id: docker_build
         uses: docker/build-push-action@v5
@@ -74,6 +88,19 @@ jobs:
           target: container-root
           push: true
           tags: ${{ steps.meta_root.outputs.tags }}
+          build-args: |
+            GIT_VERSION_TAG=${{ github.event.release.tag_name }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Docker - Build / Push (Proton)
+        id: docker_build_proton
+        uses: docker/build-push-action@v5
+        with:
+          platforms: linux/amd64,linux/arm64
+          target: container-proton
+          push: true
+          tags: ${{ steps.meta_proton.outputs.tags }}
           build-args: |
             GIT_VERSION_TAG=${{ github.event.release.tag_name }}
           cache-from: type=gha

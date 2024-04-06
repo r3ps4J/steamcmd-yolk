@@ -42,6 +42,15 @@ jobs:
           tags: type=raw,value=dev-root
           flavor: latest=false
 
+      - name: Docker - Metadata (Proton)
+        id: meta_proton
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/${{ github.repository }}
+          tags: type=raw,value=dev-proton
+          flavor: latest=false
+
       - name: Docker - Build / Push
         uses: docker/build-push-action@v5
         with:
@@ -59,5 +68,15 @@ jobs:
           target: container-root
           push: true
           tags: ${{ steps.meta_root.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Docker - Build / Push (Proton)
+        uses: docker/build-push-action@v5
+        with:
+          platforms: linux/amd64,linux/arm64
+          target: container-proton
+          push: true
+          tags: ${{ steps.meta_proton.outputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

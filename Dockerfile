@@ -78,3 +78,36 @@ CMD [ "/entrypoint.sh" ]
 
 FROM container AS container-root
 USER root
+
+FROM container AS container-proton
+
+USER root
+ENV USER=root HOME=/root
+WORKDIR /root
+
+## install required packages
+RUN dpkg --add-architecture i386
+RUN apt update
+RUN apt install -y --no-install-recommends wget iproute2 gnupg2 software-properties-common libntlm0 winbind xvfb xauth libncurses5-dev:i386 libncurses6 dbus libgdiplus lib32gcc-s1-amd64-cross
+RUN apt install -y alsa-tools libpulse0 pulseaudio libpulse-dev libasound2 libao-common gnutls-bin gnupg locales numactl cabextract curl python3 python3-pip python3-setuptools tini file
+
+# Download Proton GE
+RUN curl -sLOJ "$(curl -s https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest | grep browser_download_url | cut -d\" -f4 | egrep .tar.gz)"
+RUN tar -xzf GE-Proton*.tar.gz -C /usr/local/bin/ --strip-components=1
+RUN rm GE-Proton*.*
+
+# Proton Fix machine-id
+RUN rm -f /etc/machine-id
+RUN dbus-uuidgen --ensure=/etc/machine-id
+RUN rm /var/lib/dbus/machine-id
+RUN dbus-uuidgen --ensure
+
+# Set up Protontricks
+RUN python3 -m pip install protontricks --break-system-packages
+
+# Set up Winetricks
+RUN wget -q -O /usr/sbin/winetricks https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
+    && chmod +x /usr/sbin/winetricks
+
+USER container
+WORKDIR /home/container
