@@ -33,18 +33,21 @@ Normal image:
 - `v{{major}}` latest version within a specific major version.
 - `v{{major}}.{{minor}}` latest version within a specific major and minor version.
 - `v{{major}}.{{minor}}.{{patch}}` specific version.
+- `dev` latest commit.
 
 With root as default user:
 - `root` latest version.
 - `root-v{{major}}` latest version within a specific major version.
 - `root-v{{major}}.{{minor}}` latest version within a specific major and minor version.
 - `root-v{{major}}.{{minor}}.{{patch}}` specific version.
+- `root-dev` latest commit.
 
 With proton support:
 - `proton` latest version.
 - `proton-v{{major}}` latest version within a specific major version.
 - `proton-v{{major}}.{{minor}}` latest version within a specific major and minor version.
 - `proton-v{{major}}.{{minor}}.{{patch}}` specific version.
+- `proton-dev` latest commit.
 
 ## Drop-in replacement
 
