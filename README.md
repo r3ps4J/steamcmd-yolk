@@ -8,7 +8,7 @@ Arm64 compatibility is done through box86 and box64 thanks to the [steamcmd-arm6
 
 For some servers this image might be unstable. If you experience this I recommend taking a look at [QuintenQVD0](https://github.com/QuintenQVD0)'s [Q_eggs repository](https://github.com/QuintenQVD0/Q_eggs). He has created eggs that run with the FEX emulator instead.
 
-FEX can run more stable, based on my own experience, but is also a bit slower. It also requires you to download a RootFS which can take up a lot of space. For a more detailed comparison between emulators I recommend reading this arcticle by the creator of box86 and box64: https://box86.org/2022/03/box86-box64-vs-qemu-vs-fex-vs-rosetta2/.
+FEX can run more stable, based on my own experience, but is also a bit slower. It also requires you to download a RootFS which can take up a lot of space. For a more detailed comparison between emulators I recommend reading this arcticle by the creator of box86 and box64: <https://box86.org/2022/03/box86-box64-vs-qemu-vs-fex-vs-rosetta2/>.
 
 ## Usage
 
@@ -33,6 +33,7 @@ There is also a variant of the image with proton support. This is based on the `
 The available tags are:
 
 Normal image:
+
 - `latest` latest version.
 - `v{{major}}` latest version within a specific major version.
 - `v{{major}}.{{minor}}` latest version within a specific major and minor version.
@@ -40,6 +41,7 @@ Normal image:
 - `dev` latest commit.
 
 With root as default user:
+
 - `root` latest version.
 - `root-v{{major}}` latest version within a specific major version.
 - `root-v{{major}}.{{minor}}` latest version within a specific major and minor version.
@@ -47,6 +49,7 @@ With root as default user:
 - `root-dev` latest commit.
 
 With proton support:
+
 - `proton` latest version.
 - `proton-v{{major}}` latest version within a specific major version.
 - `proton-v{{major}}.{{minor}}` latest version within a specific major and minor version.
