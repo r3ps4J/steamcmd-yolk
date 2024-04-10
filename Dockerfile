@@ -110,4 +110,5 @@ RUN wget -q -O /usr/sbin/winetricks https://raw.githubusercontent.com/Winetricks
     && chmod +x /usr/sbin/winetricks
 
 USER container
+ENV USER=container HOME=/home/container
 WORKDIR /home/container
