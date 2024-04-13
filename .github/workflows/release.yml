@@ -67,6 +67,13 @@ jobs:
             type=semver,pattern=proton-v{{major}}
           flavor: latest=false
 
+      - name: Docker - Build
+        uses: docker/build-push-action@v5
+        with:
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
       - name: Docker - Build / Push
         id: docker_build
         uses: docker/build-push-action@v5
@@ -78,7 +85,6 @@ jobs:
           build-args: |
             GIT_VERSION_TAG=${{ github.event.release.tag_name }}
           cache-from: type=gha
-          cache-to: type=gha,mode=max
 
       - name: Docker - Build / Push (Root)
         id: docker_build_root
@@ -91,7 +97,6 @@ jobs:
           build-args: |
             GIT_VERSION_TAG=${{ github.event.release.tag_name }}
           cache-from: type=gha
-          cache-to: type=gha,mode=max
 
       - name: Docker - Build / Push (Proton)
         id: docker_build_proton
@@ -104,4 +109,3 @@ jobs:
           build-args: |
             GIT_VERSION_TAG=${{ github.event.release.tag_name }}
           cache-from: type=gha
-          cache-to: type=gha,mode=max
