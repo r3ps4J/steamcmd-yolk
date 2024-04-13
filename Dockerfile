@@ -77,7 +77,9 @@ ENTRYPOINT ["/usr/bin/tini", "-g", "--"]
 CMD [ "/entrypoint.sh" ]
 
 FROM container AS container-root
+
 USER root
+ENV USER=root HOME=/root
 
 FROM container AS container-proton
 
