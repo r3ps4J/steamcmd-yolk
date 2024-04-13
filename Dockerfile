@@ -81,6 +81,8 @@ FROM container AS container-root
 USER root
 ENV USER=root HOME=/root
 
+RUN chown -R root:root ${STEAMCMDDIR}
+
 FROM container AS container-proton
 
 USER root
