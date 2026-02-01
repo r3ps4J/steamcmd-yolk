@@ -23,6 +23,7 @@ RUN dpkg --add-architecture i386 \
         gdb \
         iproute2 \
         locales \
+        numactl \
         net-tools \
         netcat-traditional \
         tar \
@@ -31,7 +32,7 @@ RUN dpkg --add-architecture i386 \
         tzdata \
         wget \
         xvfb \
-        lib32gcc-s1 \
+        lib32gcc-s1-amd64-cross \
         lib32stdc++6 \
         lib32tinfo6 \
         lib32z1 \
@@ -106,7 +107,7 @@ RUN apt install -y --no-install-recommends \
     libncurses6 \
     dbus \
     libgdiplus \
-    lib32gcc-s1
+    lib32gcc-s1-amd64-cross
 RUN apt install -y \
     alsa-tools \
     libpulse0 \
@@ -117,6 +118,7 @@ RUN apt install -y \
     gnutls-bin \
     gnupg \
     locales \
+    numactl \
     cabextract \
     curl \
     python3 \
