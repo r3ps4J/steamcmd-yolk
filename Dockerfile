@@ -1,5 +1,5 @@
-FROM cm2network/steamcmd:root as base-amd64
-FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:root-2025-04-13 as base-arm64
+FROM cm2network/steamcmd:root-bookworm AS base-amd64
+FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:root-bookworm-2025-04-13 AS base-arm64
 
 ARG TARGETARCH
 # Native build
