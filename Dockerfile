@@ -1,12 +1,8 @@
 FROM cm2network/steamcmd:root as base-amd64
-# Ignoring --platform=arm64 as this is required for the multi-arch build to continue to work on amd64 hosts
-# hadolint ignore=DL3029
 FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:root-2025-04-13 as base-arm64
 
 ARG TARGETARCH
-# Ignoring the lack of a tag here because the tag is defined in the above FROM lines
-# and hadolint isn't aware of those.
-# hadolint ignore=DL3006
+# Native build
 FROM base-${TARGETARCH} AS container
 
 LABEL maintainer="info@r3ps4j.nl" \
@@ -91,7 +87,8 @@ ENV USER=root HOME=/root
 
 RUN chown -R root:root ${STEAMCMDDIR}
 
-FROM base-${TARGETARCH} AS container
+# Proton build
+FROM base-${TARGETARCH} AS container-proton
 
 # Install required packages
 RUN dpkg --add-architecture i386
