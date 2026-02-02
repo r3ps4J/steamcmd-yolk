@@ -1,3 +1,22 @@
+FROM golang:1.22.2-alpine as rcon-cli_builder
+
+ARG RCON_VERSION="0.10.3"
+ARG RCON_TGZ_SHA1SUM=33ee8077e66bea6ee097db4d9c923b5ed390d583
+
+WORKDIR /build
+
+# install rcon
+SHELL ["/bin/ash", "-o", "pipefail", "-c"]
+
+ENV CGO_ENABLED=0
+RUN wget -q https://github.com/gorcon/rcon-cli/archive/refs/tags/v${RCON_VERSION}.tar.gz -O rcon.tar.gz \
+    && echo "${RCON_TGZ_SHA1SUM}" rcon.tar.gz | sha1sum -c - \
+    && tar -xzvf rcon.tar.gz \
+    && rm rcon.tar.gz \
+    && mv rcon-cli-${RCON_VERSION}/* ./ \
+    && rm -rf rcon-cli-${RCON_VERSION} \
+    && go build -v ./cmd/gorcon
+
 FROM cm2network/steamcmd:root-bookworm AS base-amd64
 FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:root-bookworm-2025-04-13 AS base-arm64
 
@@ -33,7 +52,7 @@ RUN dpkg --add-architecture i386 \
         wget \
         xvfb \
         lib32gcc-s1-amd64-cross \
-        lib32stdc++6 \
+        lib32stdc++6-amd64-cross \
         lib32tinfo6 \
         lib32z1 \
         libcurl3-gnutls:i386 \
@@ -50,11 +69,9 @@ RUN dpkg --add-architecture i386 \
         libtinfo6:i386
 
 # Install rcon
-RUN cd /tmp/ \
-    && curl -sSL https://github.com/gorcon/rcon-cli/releases/download/v0.10.3/rcon-0.10.3-amd64_linux.tar.gz > rcon.tar.gz \
-    && tar xvf rcon.tar.gz \
-    && mv rcon-0.10.3-amd64_linux/rcon /usr/local/bin/
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+COPY --from=rcon-cli_builder /build/gorcon /usr/bin/rcon
 
 # Temp fix for things that still need libssl1.1
 RUN wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4_amd64.deb && \
