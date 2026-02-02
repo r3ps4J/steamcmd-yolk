@@ -72,9 +72,9 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 COPY --from=rcon-cli_builder /build/gorcon /usr/bin/rcon
 
 # Temp fix for things that still need libssl1.1
-RUN wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4_amd64.deb && \
-    dpkg -i libssl1.1_1.1.0g-2ubuntu4_amd64.deb && \
-    rm libssl1.1_1.1.0g-2ubuntu4_amd64.deb;
+RUN wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4_i386.deb && \
+    dpkg -i libssl1.1_1.1.0g-2ubuntu4_i386.deb && \
+    rm libssl1.1_1.1.0g-2ubuntu4_i386.deb;
 
 # Set the locale
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
