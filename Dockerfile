@@ -32,6 +32,7 @@ LABEL maintainer="info@r3ps4j.nl" \
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Install required packages
 RUN dpkg --add-architecture i386 \
     && apt update \
     && apt upgrade -y \
@@ -162,11 +163,10 @@ RUN	wget -q -O /usr/sbin/winetricks https://raw.githubusercontent.com/pelican-eg
     && chmod +x /usr/sbin/winetricks
 
 # Install rcon
-RUN cd /tmp/ \
-    && curl -sSL https://github.com/gorcon/rcon-cli/releases/download/v0.10.3/rcon-0.10.3-amd64_linux.tar.gz > rcon.tar.gz \
-    && tar xvf rcon.tar.gz \
-    && mv rcon-0.10.3-amd64_linux/rcon /usr/local/bin/
-            
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+COPY --from=rcon-cli_builder /build/gorcon /usr/bin/rcon
+
 # Setup user and working directory
 RUN useradd -m -d /home/container -s /bin/bash container
 USER container
