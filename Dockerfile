@@ -21,8 +21,7 @@ FROM cm2network/steamcmd:root-bookworm AS base-amd64
 FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:root-bookworm-2025-04-13 AS base-arm64
 
 ARG TARGETARCH
-# Native build
-FROM base-${TARGETARCH} AS container
+FROM base-${TARGETARCH} AS base
 
 LABEL maintainer="info@r3ps4j.nl" \
       name="r3ps4j/steamcmd-yolk" \
@@ -31,6 +30,13 @@ LABEL maintainer="info@r3ps4j.nl" \
       org.opencontainers.image.source="https://github.com/r3ps4j/steamcmd-yolk"
 
 ENV DEBIAN_FRONTEND=noninteractive
+
+# Install rcon
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+COPY --from=rcon-cli_builder /build/gorcon /usr/bin/rcon
+
+FROM base AS container
 
 # Install required packages
 RUN dpkg --add-architecture i386 \
@@ -66,11 +72,6 @@ RUN dpkg --add-architecture i386 \
         libsdl2-2.0-0:i386 \
         libssl-dev:i386 \
         libtinfo6:i386
-
-# Install rcon
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
-COPY --from=rcon-cli_builder /build/gorcon /usr/bin/rcon
 
 # Temp fix for things that still need libssl1.1
 RUN wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4_i386.deb && \
@@ -162,11 +163,6 @@ RUN pipx install protontricks
 RUN	wget -q -O /usr/sbin/winetricks https://raw.githubusercontent.com/pelican-eggs/winetricks/master/src/winetricks \
     && chmod +x /usr/sbin/winetricks
 
-# Install rcon
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
-COPY --from=rcon-cli_builder /build/gorcon /usr/bin/rcon
-
 # Setup user and working directory
 RUN useradd -m -d /home/container -s /bin/bash container
 USER container
@@ -175,7 +171,7 @@ WORKDIR /home/container
 
 STOPSIGNAL SIGINT
 
-COPY --chown=container:container ./../entrypoint.sh /entrypoint.sh
+COPY --chown=container:container ./entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/usr/bin/tini", "-g", "--"]
 CMD ["/entrypoint.sh"]
