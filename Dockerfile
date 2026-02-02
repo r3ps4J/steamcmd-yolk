@@ -17,15 +17,10 @@ RUN wget -q https://github.com/gorcon/rcon-cli/archive/refs/tags/v${RCON_VERSION
     && rm -rf rcon-cli-${RCON_VERSION} \
     && go build -v ./cmd/gorcon
 
-FROM cm2network/steamcmd:root as base-amd64
-# Ignoring --platform=arm64 as this is required for the multi-arch build to continue to work on amd64 hosts
-# hadolint ignore=DL3029
-FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:root-2025-04-13 as base-arm64
+FROM cm2network/steamcmd:root-bookworm AS base-amd64
+FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:root-bookworm-2025-04-13 AS base-arm64
 
 ARG TARGETARCH
-# Ignoring the lack of a tag here because the tag is defined in the above FROM lines
-# and hadolint isn't aware of those.
-# hadolint ignore=DL3006
 FROM base-${TARGETARCH} AS container
 
 LABEL maintainer="info@r3ps4j.nl" \
@@ -35,7 +30,6 @@ LABEL maintainer="info@r3ps4j.nl" \
       org.opencontainers.image.source="https://github.com/r3ps4j/steamcmd-yolk"
 
 # update and install dependencies
-# hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y --no-install-recommends \
     procps=2:4.0.2-3 \
     wget \ 
