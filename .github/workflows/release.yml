@@ -104,3 +104,4 @@ jobs:
           build-args: |
             GIT_VERSION_TAG=${{ github.event.release.tag_name }}
           cache-from: type=gha
+          cache-to: type=gha,mode=max
