@@ -27,7 +27,7 @@ jobs:
 
       - name: Create image tag suffix
         id: suffix
-        run: echo "suffix=${{ github.event_name == 'push' && 'dev' || github.sha }}"
+        run: echo "suffix=${{ github.event_name == 'push' && 'dev' || github.sha }}" >> $GITHUB_OUTPUT
 
       - name: Docker - Metadata
         id: meta
