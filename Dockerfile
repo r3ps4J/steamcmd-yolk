@@ -53,8 +53,6 @@ RUN dpkg --add-architecture i386 \
         xvfb \
         lib32gcc-s1-amd64-cross \
         lib32stdc++6-amd64-cross \
-        lib32tinfo6 \
-        lib32z1 \
         libcurl3-gnutls:i386 \
         libcurl4-gnutls-dev:i386 \
         libcurl4:i386 \
