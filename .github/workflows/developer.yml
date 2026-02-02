@@ -1,8 +1,12 @@
 ---
 name: Developer image
 on:
-  push:
-    branches: [master]
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: The branch, tag or SHA to checkout.
+        required: true
+        default: ''
 
 jobs:
   push:
@@ -10,6 +14,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.commit }}
 
       - name: Docker - GHCR Login
         uses: docker/login-action@v3
@@ -30,7 +36,7 @@ jobs:
         with:
           images: |
             ghcr.io/${{ github.repository }}
-          tags: type=raw,value=dev
+          tags: type=raw,value=${{ github.event.inputs.commit }}
           flavor: latest=false
 
       - name: Docker - Metadata (Root)
@@ -39,7 +45,7 @@ jobs:
         with:
           images: |
             ghcr.io/${{ github.repository }}
-          tags: type=raw,value=root-dev
+          tags: type=raw,value=root-${{ github.event.inputs.commit }}
           flavor: latest=false
 
       - name: Docker - Metadata (Proton)
@@ -48,7 +54,7 @@ jobs:
         with:
           images: |
             ghcr.io/${{ github.repository }}
-          tags: type=raw,value=proton-dev
+          tags: type=raw,value=proton-${{ github.event.inputs.commit }}
           flavor: latest=false
 
       - name: Docker - Build / Push
