@@ -86,8 +86,38 @@ WORKDIR /root
 ## install required packages
 RUN dpkg --add-architecture i386
 RUN apt update
-RUN apt install -y --no-install-recommends wget iproute2 gnupg2 software-properties-common libntlm0 winbind xvfb xauth libncurses5-dev:i386 libncurses6 dbus libgdiplus lib32gcc-s1-amd64-cross
-RUN apt install -y alsa-tools libpulse0 pulseaudio libpulse-dev libasound2 libao-common gnutls-bin gnupg locales numactl cabextract curl python3 python3-pip python3-setuptools tini file
+RUN apt install -y --no-install-recommends \
+    wget \
+    iproute2 \
+    gnupg2 \
+    software-properties-common \
+    libntlm0 \
+    winbind \
+    xvfb \
+    xauth \
+    libncurses5-dev:i386 \
+    libncurses6 \
+    dbus \
+    libgdiplus \
+    lib32gcc-s1-amd64-cross
+RUN apt install -y \
+    alsa-tools \
+    libpulse0 \
+    pulseaudio \
+    libpulse-dev \
+    libasound2 \
+    libao-common \
+    gnutls-bin \
+    gnupg \
+    locales \
+    numactl \
+    cabextract \
+    curl \
+    python3 \
+    python3-pip \
+    python3-setuptools \
+    tini \
+    file
 
 # Download Proton GE
 RUN curl -sLOJ "$(curl -s https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest | grep browser_download_url | cut -d\" -f4 | egrep .tar.gz)"
