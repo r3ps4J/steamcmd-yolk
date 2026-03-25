@@ -9,7 +9,7 @@ FROM        base-${TARGETARCH} AS base
 
 LABEL       author="r3ps4J" maintainer="info@r3ps4j.nl"
 
-
+LABEL       org.opencontainers.image.source="https://github.com/r3ps4J/steamcmd-yolk"
 
 # Install required packages
 RUN         dpkg --add-architecture i386
@@ -27,7 +27,7 @@ RUN         apt install -y --no-install-recommends \
                 libncurses6 \
                 dbus \
                 libgdiplus \
-                lib32gcc-s1
+                lib32gcc-s1-amd64-cross
 RUN         apt install -y \
                 alsa-tools \
                 libpulse0 \
