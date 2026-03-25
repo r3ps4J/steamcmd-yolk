@@ -54,7 +54,7 @@ jobs:
         with:
           platforms: linux/amd64,linux/arm64
           context: .
-          file: ./${{ matrix.tag }}
+          file: ./${{ matrix.tag }}/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           build-args: |
