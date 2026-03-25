@@ -1,3 +1,22 @@
+FROM golang:1.22.2-alpine as rcon-cli_builder
+
+ARG RCON_VERSION="0.10.3"
+ARG RCON_TGZ_SHA1SUM=33ee8077e66bea6ee097db4d9c923b5ed390d583
+
+WORKDIR /build
+
+# install rcon
+SHELL ["/bin/ash", "-o", "pipefail", "-c"]
+
+ENV CGO_ENABLED=0
+RUN wget -q https://github.com/gorcon/rcon-cli/archive/refs/tags/v${RCON_VERSION}.tar.gz -O rcon.tar.gz \
+    && echo "${RCON_TGZ_SHA1SUM}" rcon.tar.gz | sha1sum -c - \
+    && tar -xzvf rcon.tar.gz \
+    && rm rcon.tar.gz \
+    && mv rcon-cli-${RCON_VERSION}/* ./ \
+    && rm -rf rcon-cli-${RCON_VERSION} \
+    && go build -v ./cmd/gorcon
+
 # ---------------------------------------------
 # Steam Proton image
 # ---------------------------------------------
@@ -5,7 +24,7 @@ FROM        cm2network/steamcmd:root-bookworm AS base-amd64
 FROM        --platform=arm64 sonroyaalmerol/steamcmd-arm64:root-bookworm-2025-04-13 AS base-arm64
 
 ARG         TARGETARCH
-FROM        base-${TARGETARCH} AS base
+FROM        base-${TARGETARCH}
 
 LABEL       author="r3ps4J" maintainer="info@r3ps4j.nl"
 
@@ -66,11 +85,8 @@ RUN	        wget -q -O /usr/sbin/winetricks https://raw.githubusercontent.com/pe
             && chmod +x /usr/sbin/winetricks
 
 # Install rcon
-RUN         cd /tmp/ \
-            && curl -sSL https://github.com/gorcon/rcon-cli/releases/download/v0.10.3/rcon-0.10.3-amd64_linux.tar.gz > rcon.tar.gz \
-            && tar xvf rcon.tar.gz \
-            && mv rcon-0.10.3-amd64_linux/rcon /usr/local/bin/
-            
+COPY --from=rcon-cli_builder /build/gorcon /usr/bin/rcon
+
 # Setup user and working directory
 RUN         useradd -m -d /home/container -s /bin/bash container
 USER        container
