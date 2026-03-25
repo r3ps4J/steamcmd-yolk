@@ -6,7 +6,7 @@ on:
 
 jobs:
   # Builds the Dockerfile and pushes it to GHCR
-  release:
+  push:
     name: Release - Docker image (${{ matrix.tag }})
     runs-on: ubuntu-latest
     strategy:

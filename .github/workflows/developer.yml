@@ -7,7 +7,7 @@ on:
 
 jobs:
   # Builds the Dockerfile and pushes it to GHCR
-  release:
+  push:
     strategy:
       fail-fast: false
       matrix:
