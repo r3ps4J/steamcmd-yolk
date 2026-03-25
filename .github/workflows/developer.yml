@@ -47,7 +47,7 @@ jobs:
           # generate Docker tags based on the following events/attributes
           tags: |
             type=raw,value=${{ matrix.tag }}-${{ steps.suffix.outputs.suffix }}
-          flavor: latest=${{ matrix.latest }}
+          flavor: latest=false
 
       - name: Build and push
         uses: docker/build-push-action@v7
