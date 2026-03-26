@@ -17,6 +17,8 @@ jobs:
             latest: true
           - tag: proton
             latest: false
+          - tag: fex
+            latest: false
     steps:
       - name: Checkout
         uses: actions/checkout@v6
