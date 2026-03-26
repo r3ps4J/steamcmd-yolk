@@ -17,14 +17,64 @@ RUN wget -q https://github.com/gorcon/rcon-cli/archive/refs/tags/v${RCON_VERSION
     && rm -rf rcon-cli-${RCON_VERSION} \
     && go build -v ./cmd/gorcon
 
-FROM        cm2network/steamcmd:root-trixie AS steamcmd
+FROM        cm2network/steamcmd:root-bookworm AS steamcmd
 
-FROM        ubuntu:24.04 AS base-amd64
+FROM ubuntu:24.04 AS fex_builder
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install only build-time dependencies with --no-install-recommends
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    ca-certificates \
+    jq \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Download FEX rootfs dynamically using jq
+RUN mkdir -p /root/.fex-emu/RootFS \
+    && ROOTFS_URL=$(curl -s https://rootfs.fex-emu.gg/RootFS_links.json | \
+    jq -r '.v1 | to_entries[] | select(.value.DistroMatch == "ubuntu" and .value.DistroVersion == "22.04" and .value.Type == "squashfs") | .value.URL') \
+    && echo "Downloading RootFS from: $ROOTFS_URL" \
+    && curl -L -o /root/.fex-emu/RootFS/Ubuntu_22_04.sqsh "$ROOTFS_URL" \
+    && echo '{"Config":{"RootFS":"Ubuntu_22_04.sqsh"}}' > /root/.fex-emu/Config.json
+
+FROM        ubuntu:22.04 AS base
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Setup user and working directory
+RUN         useradd -m -d /home/container -s /bin/bash container
+USER        container
+ENV         USER=container HOME=/home/container
+WORKDIR     /home/container
+
+FROM        base AS base-amd64
 ENTRYPOINT  ["/usr/bin/tini", "-g", "--"]
 
-FROM        --platform=arm64 stevenlafl/fex:2512 AS base-arm64
-USER        root
-WORKDIR     /
+FROM        --platform=arm64 base AS base-arm64
+
+# Install only runtime dependencies with --no-install-recommends
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    software-properties-common \
+    gnupg \
+    fuse3 \
+    && add-apt-repository -y ppa:fex-emu/fex \
+    && apt-get update && apt-get install -y --no-install-recommends \
+    fex-emu-armv8.0 \
+    fex-emu-binfmt32 \
+    fex-emu-binfmt64 || true \
+    && apt-get purge -y --auto-remove software-properties-common gnupg || true \
+    && apt-get clean || true \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/apt/archives/* \
+    && update-binfmts --enable \
+    && install -d -m 0775 -o root -g container /opt/.fex-emu \
+    && ln -s /opt/.fex-emu /home/container/.fex-emu
+
+# Copy from builder stage
+COPY --chmod=775 --chown=root:container --from=fex_builder /root/.fex-emu /opt/.fex-emu
+
+ENV PATH="/root/.local/bin:${PATH}"
+
 ENTRYPOINT  ["/usr/bin/tini", "-g", "--", "FEXBash"]
 
 ARG         TARGETARCH
@@ -62,7 +112,7 @@ RUN         dpkg --add-architecture i386 \
                 libfontconfig1 \
                 libgcc-11-dev \
                 libgcc-12-dev \
-                libncurses6:i386 \
+                libncurses5:i386 \
                 libsdl1.2debian \
                 libsdl2-2.0-0 \
                 libsdl2-2.0-0:i386 \
@@ -89,12 +139,6 @@ RUN         sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
 ENV         LANG=en_US.UTF-8
 ENV         LANGUAGE=en_US:en
 ENV         LC_ALL=en_US.UTF-8
-
-# Setup user and working directory
-RUN         useradd -m -d /home/container -s /bin/bash container
-USER        container
-ENV         USER=container HOME=/home/container
-WORKDIR     /home/container
 
 STOPSIGNAL  SIGINT
 
