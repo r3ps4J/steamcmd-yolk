@@ -23,6 +23,8 @@ FROM        ubuntu:24.04 AS base-amd64
 ENTRYPOINT  ["/usr/bin/tini", "-g", "--"]
 
 FROM        --platform=arm64 stevenlafl/fex:2512 AS base-arm64
+USER        root
+WORKDIR     /
 ENTRYPOINT  ["/usr/bin/tini", "-g", "--", "FEXBash"]
 
 ARG         TARGETARCH
