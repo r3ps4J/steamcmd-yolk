@@ -17,7 +17,7 @@ RUN wget -q https://github.com/gorcon/rcon-cli/archive/refs/tags/v${RCON_VERSION
     && rm -rf rcon-cli-${RCON_VERSION} \
     && go build -v ./cmd/gorcon
 
-FROM        cm2network/steamcmd:root-bookworm AS steamcmd
+FROM        cm2network/steamcmd:root-trixie AS steamcmd
 
 FROM ubuntu:24.04 AS fex_builder
 
