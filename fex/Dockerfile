@@ -39,19 +39,15 @@ RUN mkdir -p /root/.fex-emu/RootFS \
     && echo '{"Config":{"RootFS":"Ubuntu_22_04.sqsh"}}' > /root/.fex-emu/Config.json
 
 FROM        ubuntu:22.04 AS base
-
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Setup user and working directory
+# Create user
 RUN         useradd -m -d /home/container -s /bin/bash container
-USER        container
-ENV         USER=container HOME=/home/container
-WORKDIR     /home/container
 
 FROM        base AS base-amd64
 ENTRYPOINT  ["/usr/bin/tini", "-g", "--"]
 
 FROM        --platform=arm64 base AS base-arm64
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Install only runtime dependencies with --no-install-recommends
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -139,6 +135,11 @@ RUN         sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
 ENV         LANG=en_US.UTF-8
 ENV         LANGUAGE=en_US:en
 ENV         LC_ALL=en_US.UTF-8
+
+# Setup user and working directory
+USER        container
+ENV         USER=container HOME=/home/container
+WORKDIR     /home/container
 
 STOPSIGNAL  SIGINT
 
