@@ -33,12 +33,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Download FEX rootfs dynamically using jq
 RUN mkdir -p /root/.fex-emu/RootFS \
     && ROOTFS_URL=$(curl -s https://rootfs.fex-emu.gg/RootFS_links.json | \
-    jq -r '.v1 | to_entries[] | select(.value.DistroMatch == "ubuntu" and .value.DistroVersion == "22.04" and .value.Type == "squashfs") | .value.URL') \
+    jq -r '.v1 | to_entries[] | select(.value.DistroMatch == "ubuntu" and .value.DistroVersion == "24.04" and .value.Type == "squashfs") | .value.URL') \
     && echo "Downloading RootFS from: $ROOTFS_URL" \
-    && curl -L -o /root/.fex-emu/RootFS/Ubuntu_22_04.sqsh "$ROOTFS_URL" \
-    && echo '{"Config":{"RootFS":"Ubuntu_22_04.sqsh"}}' > /root/.fex-emu/Config.json
+    && curl -L -o /root/.fex-emu/RootFS/Ubuntu_24_04.sqsh "$ROOTFS_URL" \
+    && echo '{"Config":{"RootFS":"Ubuntu_24_04.sqsh"}}' > /root/.fex-emu/Config.json
 
-FROM        ubuntu:22.04 AS base
+FROM        ubuntu:24.04 AS base
 # Create user
 RUN         useradd -m -d /home/container -s /bin/bash container
 
@@ -82,8 +82,7 @@ LABEL       org.opencontainers.image.source="https://github.com/r3ps4J/steamcmd-
 
 ENV         DEBIAN_FRONTEND=noninteractive
 
-RUN         dpkg --add-architecture i386 \
-            && apt update \
+RUN         apt update \
             && apt upgrade -y \
             && apt install -y \
                 curl \
@@ -100,20 +99,21 @@ RUN         dpkg --add-architecture i386 \
                 tzdata \
                 wget \
                 xvfb \
-                lib32gcc-s1-amd64-cross \
-                lib32stdc++6-amd64-cross \
-                libcurl3-gnutls:i386 \
-                libcurl4-gnutls-dev:i386 \
-                libcurl4:i386 \
+                lib32gcc-s1 \
+                lib32stdc++6 \
+                lib32tinfo6 \
+                lib32z1 \
+                libcurl3-gnutls \
+                libcurl4-gnutls-dev \
+                libcurl4 \
                 libfontconfig1 \
                 libgcc-11-dev \
                 libgcc-12-dev \
-                libncurses5:i386 \
+                libncurses6 \
                 libsdl1.2debian \
                 libsdl2-2.0-0 \
-                libsdl2-2.0-0:i386 \
-                libssl-dev:i386 \
-                libtinfo6:i386
+                libssl-dev \
+                libtinfo6
 
 # Install rcon
 COPY --from=rcon-cli_builder /build/gorcon /usr/bin/rcon
