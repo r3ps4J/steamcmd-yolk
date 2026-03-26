@@ -62,7 +62,7 @@ RUN         dpkg --add-architecture i386 \
                 libfontconfig1 \
                 libgcc-11-dev \
                 libgcc-12-dev \
-                libncurses5:i386 \
+                libncurses6:i386 \
                 libsdl1.2debian \
                 libsdl2-2.0-0 \
                 libsdl2-2.0-0:i386 \
