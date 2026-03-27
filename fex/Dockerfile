@@ -48,13 +48,13 @@ RUN apt-get update && \
     libsdl2-dev \
     libepoxy-dev \
     libssl-dev \
-    python-setuptools \
+    python3-setuptools \
     g++-x86-64-linux-gnu \
     nasm \
     python3-clang \
-    libstdc++-10-dev-i386-cross \
-    libstdc++-10-dev-amd64-cross \
-    libstdc++-10-dev-arm64-cross \
+    libstdc++-12-dev-i386-cross \
+    libstdc++-12-dev-amd64-cross \
+    libstdc++-12-dev-arm64-cross \
     squashfs-tools \
     squashfuse \
     libc-bin \
