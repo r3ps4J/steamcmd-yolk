@@ -70,6 +70,8 @@ RUN apt-get update && \
     squashfuse \
     # For unittests, needs catchsegv from this
     libc-bin \
+    # FEXConfig GUI
+    qtdeclarative6-dev \
     # etc
     expect \
     curl \
