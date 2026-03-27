@@ -71,7 +71,7 @@ RUN apt-get update && \
     # For unittests, needs catchsegv from this
     libc-bin \
     # FEXConfig GUI
-    qtdeclarative6-dev \
+    qtdeclarative5-dev \
     # etc
     expect \
     curl \
