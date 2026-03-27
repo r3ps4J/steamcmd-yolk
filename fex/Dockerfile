@@ -100,8 +100,7 @@ RUN git clone --recurse-submodules https://github.com/FEX-Emu/FEX.git && \
 WORKDIR /home/fex/FEX/Build
 
 RUN sudo ninja install && \
-    sudo ninja binfmt_misc_32 && \
-    sudo ninja binfmt_misc_64
+    sudo ninja binfmt_misc
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
