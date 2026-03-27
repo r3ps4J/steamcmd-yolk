@@ -17,62 +17,97 @@ RUN wget -q https://github.com/gorcon/rcon-cli/archive/refs/tags/v${RCON_VERSION
     && rm -rf rcon-cli-${RCON_VERSION} \
     && go build -v ./cmd/gorcon
 
-FROM        cm2network/steamcmd:root-trixie AS steamcmd
+# Trixie steamcmd as that is what 24.04 is based on
+FROM cm2network/steamcmd:root-trixie AS steamcmd
 
-FROM ubuntu:24.04 AS fex_builder
+# Use the official Ubuntu 24.04 as the base image
+FROM ubuntu:24.04 AS base
+# Create user
+RUN useradd -m -d /home/container -s /bin/bash container
 
+FROM base AS base-amd64
+ENTRYPOINT  ["/usr/bin/tini", "-g", "--"]
+
+FROM --platform=arm64 base AS base-arm64
+
+# Set environment variables to avoid interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install only build-time dependencies with --no-install-recommends
+# Install necessary dependencies
+RUN apt-get update && \
+    apt-get install -y \
+    git \
+    cmake \
+    ninja-build \
+    pkg-config \
+    ccache \
+    clang \
+    llvm \
+    lld \
+    binfmt-support \
+    libsdl2-dev \
+    libepoxy-dev \
+    libssl-dev \
+    python-setuptools \
+    g++-x86-64-linux-gnu \
+    nasm \
+    python3-clang \
+    libstdc++-10-dev-i386-cross \
+    libstdc++-10-dev-amd64-cross \
+    libstdc++-10-dev-arm64-cross \
+    squashfs-tools \
+    squashfuse \
+    libc-bin \
+    expect \
+    curl \
+    sudo \
+    fuse
+
+# Create a new user and set their home directory
+RUN useradd -m -s /bin/bash fex
+
+RUN usermod -aG sudo fex
+
+RUN echo "fex ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/fex
+
+USER fex
+
+WORKDIR /home/fex
+
+# Clone the FEX repository and build it
+RUN git clone --recurse-submodules https://github.com/FEX-Emu/FEX.git && \
+    cd FEX && \
+    mkdir Build && \
+    cd Build && \
+    CC=clang CXX=clang++ cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DUSE_LINKER=lld -DENABLE_LTO=True -DBUILD_TESTS=False -DENABLE_ASSERTIONS=False -G Ninja .. && \
+    ninja
+
+WORKDIR /home/fex/FEX/Build
+
+RUN sudo ninja install && \
+    sudo ninja binfmt_misc_32 && \
+    sudo ninja binfmt_misc_64
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     ca-certificates \
     jq \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+USER container
+
+# Set up rootfs
 # Download FEX rootfs dynamically using jq
-RUN mkdir -p /root/.fex-emu/RootFS \
+RUN mkdir -p /home/container/.fex-emu/RootFS \
     && ROOTFS_URL=$(curl -s https://rootfs.fex-emu.gg/RootFS_links.json | \
     jq -r '.v1 | to_entries[] | select(.value.DistroMatch == "ubuntu" and .value.DistroVersion == "24.04" and .value.Type == "squashfs") | .value.URL') \
     && echo "Downloading RootFS from: $ROOTFS_URL" \
-    && curl -L -o /root/.fex-emu/RootFS/Ubuntu_24_04.sqsh "$ROOTFS_URL" \
-    && echo '{"Config":{"RootFS":"Ubuntu_24_04.sqsh"}}' > /root/.fex-emu/Config.json
-
-FROM        ubuntu:24.04 AS base
-# Create user
-RUN         useradd -m -d /home/container -s /bin/bash container
-
-FROM        base AS base-amd64
-ENTRYPOINT  ["/usr/bin/tini", "-g", "--"]
-
-FROM        --platform=arm64 base AS base-arm64
-
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Install only runtime dependencies with --no-install-recommends
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    software-properties-common \
-    gnupg \
-    fuse3 \
-    && add-apt-repository -y ppa:fex-emu/fex \
-    && apt-get update && apt-get install -y --no-install-recommends \
-    fex-emu-armv8.0 \
-    fex-emu-binfmt32 \
-    fex-emu-binfmt64 || true \
-    && apt-get purge -y --auto-remove software-properties-common gnupg || true \
-    && apt-get clean || true \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/apt/archives/* \
-    && update-binfmts --enable \
-    && install -d -m 0775 -o root -g container /opt/.fex-emu \
-    && ln -s /opt/.fex-emu /home/container/.fex-emu
-
-# Copy from builder stage
-COPY --chmod=775 --chown=root:container --from=fex_builder /root/.fex-emu /opt/.fex-emu
-
-ENV PATH="/root/.local/bin:${PATH}"
+    && curl -L -o /home/container/.fex-emu/RootFS/Ubuntu_24_04.sqsh "$ROOTFS_URL" \
+    && echo '{"Config":{"RootFS":"Ubuntu_24_04.sqsh"}}' > /home/container/.fex-emu/Config.json
 
 ENTRYPOINT  ["/usr/bin/tini", "-g", "--", "FEXBash"]
 
+## Beginning of common steps
 ARG         TARGETARCH
 FROM        base-${TARGETARCH}
 
