@@ -17,11 +17,11 @@ RUN wget -q https://github.com/gorcon/rcon-cli/archive/refs/tags/v${RCON_VERSION
     && rm -rf rcon-cli-${RCON_VERSION} \
     && go build -v ./cmd/gorcon
 
-# Trixie steamcmd as that is what 24.04 is based on
-FROM cm2network/steamcmd:root-trixie AS steamcmd
+# Bookworm steamcmd as that is what 22.04 is based on
+FROM cm2network/steamcmd:root-bookworm AS steamcmd
 
-# Use the official Ubuntu 24.04 as the base image
-FROM ubuntu:24.04 AS base
+# Use the official Ubuntu 22.04 as the base image
+FROM ubuntu:22.04 AS base
 # Create user
 RUN useradd -m -d /home/container -s /bin/bash container
 
@@ -144,7 +144,7 @@ RUN         apt update \
                 libfontconfig1 \
                 libgcc-11-dev \
                 libgcc-12-dev \
-                libncurses6 \
+                libncurses5 \
                 libsdl1.2debian \
                 libsdl2-2.0-0 \
                 libssl-dev \
