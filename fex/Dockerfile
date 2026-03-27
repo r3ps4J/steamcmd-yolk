@@ -102,6 +102,8 @@ WORKDIR /home/fex/FEX/Build
 RUN sudo ninja install && \
     sudo ninja binfmt_misc
 
+USER root
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     ca-certificates \
@@ -128,6 +130,9 @@ FROM        base-${TARGETARCH}
 LABEL       author="r3ps4J" maintainer="info@r3ps4j.nl"
 
 LABEL       org.opencontainers.image.source="https://github.com/r3ps4J/steamcmd-yolk"
+
+USER        root
+WORKDIR     /
 
 ENV         DEBIAN_FRONTEND=noninteractive
 
