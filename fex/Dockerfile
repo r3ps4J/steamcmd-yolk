@@ -43,21 +43,33 @@ RUN apt-get update && \
     ccache \
     clang \
     llvm \
+    # For ThinLTO
     lld \
+    # For AArch64 binfmt_misc support
     binfmt-support \
     libsdl2-dev \
     libepoxy-dev \
     libssl-dev \
+    # For build scripts
     python3-setuptools \
+    # For building thunks
     g++-x86-64-linux-gnu \
     nasm \
+    # For struct verifier
     python3-clang \
+    # For struct verifier
     libstdc++-12-dev-i386-cross \
+    # For struct verifier
     libstdc++-12-dev-amd64-cross \
+    # For struct verifier
     libstdc++-12-dev-arm64-cross \
+    # For squashfs rootfs support
     squashfs-tools \
+    # For mounting the squashfs
     squashfuse \
+    # For unittests, needs catchsegv from this
     libc-bin \
+    # etc
     expect \
     curl \
     sudo \
