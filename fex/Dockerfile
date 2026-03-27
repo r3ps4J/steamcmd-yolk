@@ -41,6 +41,7 @@ RUN apt-get update && \
     ninja-build \
     pkg-config \
     ccache \
+    # Recommended if you're rebuilding constantly
     clang \
     llvm \
     # For ThinLTO
