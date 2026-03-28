@@ -128,11 +128,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Download FEX rootfs dynamically using jq
 RUN mkdir -p /opt/fex/RootFS \
     && ROOTFS_URL=$(curl -s https://rootfs.fex-emu.gg/RootFS_links.json | \
-    jq -r '.v1 | to_entries[] | select(.value.DistroMatch == "ubuntu" and .value.DistroVersion == "22.04" and .value.Type == "squashfs") | .value.URL') \
+    jq -r '.v1 | to_entries[] | select(.value.DistroMatch == "ubuntu" and .value.DistroVersion == "22.04" and .value.Type == "erofs") | .value.URL') \
     && echo "Downloading RootFS from: $ROOTFS_URL" \
-    && curl -L -o /opt/fex/RootFS/Ubuntu_22_04.sqsh "$ROOTFS_URL"
+    && curl -L -o /opt/fex/RootFS/Ubuntu_22_04.ero "$ROOTFS_URL"
 # Override RootFS config
-ENV FEX_ROOTFS=/opt/fex/RootFS/Ubuntu_22_04.sqsh
+ENV FEX_ROOTFS=/opt/fex/RootFS/Ubuntu_22_04.ero
 
 ENTRYPOINT  ["/usr/bin/tini", "-g", "--", "FEXBash"]
 
