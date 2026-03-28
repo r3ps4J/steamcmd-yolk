@@ -148,7 +148,6 @@ USER        root
 WORKDIR     /
 
 # Install required packages
-RUN         dpkg --add-architecture i386
 RUN         apt update
 RUN         apt install -y --no-install-recommends \
                 wget \
