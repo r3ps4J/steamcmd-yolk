@@ -115,6 +115,9 @@ WORKDIR /home/fex/FEX/Build
 RUN sudo ninja install && \
     sudo ninja binfmt_misc
 
+# Remove source files
+RUN rm -rf ./FEX
+
 USER root
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
