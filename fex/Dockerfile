@@ -126,10 +126,10 @@ USER container
 # Download FEX rootfs dynamically using jq
 RUN mkdir -p /home/container/.fex-emu/RootFS \
     && ROOTFS_URL=$(curl -s https://rootfs.fex-emu.gg/RootFS_links.json | \
-    jq -r '.v1 | to_entries[] | select(.value.DistroMatch == "ubuntu" and .value.DistroVersion == "24.04" and .value.Type == "squashfs") | .value.URL') \
+    jq -r '.v1 | to_entries[] | select(.value.DistroMatch == "ubuntu" and .value.DistroVersion == "22.04" and .value.Type == "squashfs") | .value.URL') \
     && echo "Downloading RootFS from: $ROOTFS_URL" \
     && curl -L -o /home/container/.fex-emu/RootFS/Ubuntu_24_04.sqsh "$ROOTFS_URL" \
-    && echo '{"Config":{"RootFS":"Ubuntu_24_04.sqsh"}}' > /home/container/.fex-emu/Config.json
+    && echo '{"Config":{"RootFS":"Ubuntu_22_04.sqsh"}}' > /home/container/.fex-emu/Config.json
 
 ENTRYPOINT  ["/usr/bin/tini", "-g", "--", "FEXBash"]
 
