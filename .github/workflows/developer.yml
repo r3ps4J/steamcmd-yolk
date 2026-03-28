@@ -15,6 +15,7 @@ jobs:
           - tag: debian
           - tag: proton
           - tag: fex
+          - tag: fex-proton
     name: Release - Docker image (${{ matrix.tag }})
     runs-on: ubuntu-latest
     steps:
