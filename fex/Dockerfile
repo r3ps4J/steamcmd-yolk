@@ -23,8 +23,6 @@ FROM cm2network/steamcmd:root-bookworm AS steamcmd
 # Use the official Ubuntu 22.04 as the base image
 FROM ubuntu:22.04 AS base
 
-# Create user
-RUN useradd -m -d /home/container -s /bin/bash container
 # Set environment variables to avoid interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -123,16 +121,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     jq \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-USER container
-
 # Set up rootfs
 # Download FEX rootfs dynamically using jq
-RUN mkdir -p /home/container/.fex-emu/RootFS \
+RUN mkdir -p /opt/fex/RootFS \
     && ROOTFS_URL=$(curl -s https://rootfs.fex-emu.gg/RootFS_links.json | \
     jq -r '.v1 | to_entries[] | select(.value.DistroMatch == "ubuntu" and .value.DistroVersion == "22.04" and .value.Type == "squashfs") | .value.URL') \
     && echo "Downloading RootFS from: $ROOTFS_URL" \
-    && curl -L -o /home/container/.fex-emu/RootFS/Ubuntu_24_04.sqsh "$ROOTFS_URL" \
-    && echo '{"Config":{"RootFS":"Ubuntu_22_04.sqsh"}}' > /home/container/.fex-emu/Config.json
+    && curl -L -o /opt/fex/RootFS/Ubuntu_22_04.sqsh "$ROOTFS_URL"
+# Override RootFS config
+ENV FEX_ROOTFS=/opt/fex/RootFS/Ubuntu_22_04.sqsh
 
 ENTRYPOINT  ["/usr/bin/tini", "-g", "--", "FEXBash"]
 
@@ -205,6 +202,7 @@ ENV         LANGUAGE=en_US:en
 ENV         LC_ALL=en_US.UTF-8
 
 # Setup user and working directory
+RUN useradd -m -d /home/container -s /bin/bash container
 USER        container
 ENV         USER=container HOME=/home/container
 WORKDIR     /home/container
