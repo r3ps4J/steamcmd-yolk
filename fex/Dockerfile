@@ -163,10 +163,6 @@ RUN         apt update \
                 tzdata \
                 wget \
                 xvfb \
-                lib32gcc-s1 \
-                lib32stdc++6 \
-                lib32tinfo6 \
-                lib32z1 \
                 libcurl3-gnutls \
                 libcurl4-gnutls-dev \
                 libcurl4 \
