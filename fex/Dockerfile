@@ -22,16 +22,26 @@ FROM cm2network/steamcmd:root-bookworm AS steamcmd
 
 # Use the official Ubuntu 22.04 as the base image
 FROM ubuntu:22.04 AS base
+
 # Create user
 RUN useradd -m -d /home/container -s /bin/bash container
+# Set environment variables to avoid interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
 
 FROM base AS base-amd64
+
+# 32-bit libraries only needed on amd64
+RUN apt update \
+    && apt upgrade -y \
+    && apt install -y \
+        lib32gcc-s1 \
+        lib32stdc++6 \
+        lib32tinfo6 \
+        lib32z1
+
 ENTRYPOINT  ["/usr/bin/tini", "-g", "--"]
 
 FROM --platform=arm64 base AS base-arm64
-
-# Set environment variables to avoid interactive prompts
-ENV DEBIAN_FRONTEND=noninteractive
 
 # Install necessary dependencies
 RUN apt-get update && \
