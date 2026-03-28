@@ -185,6 +185,11 @@ COPY --from=rcon-cli_builder /build/gorcon /usr/bin/rcon
 # Install steamcmd
 COPY --from=steamcmd /home/steam /home/steam
 ENV STEAMCMDDIR=/home/steam/steamcmd
+# skips Steam's bash script from checking for glibc and throwing a warning window 
+ENV     STEAMOS=1
+ENV     STEAM_RUNTIME=1
+# fixes some games crashing from a dbus bug
+ENV     DBUS_FATAL_WARNINGS=0
 
 # Temp fix for things that still need libssl1.1
 RUN         if [ "$(uname -m)" = "x86_64" ]; then \
